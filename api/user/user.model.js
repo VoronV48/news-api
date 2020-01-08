@@ -16,5 +16,5 @@ var usersSchema = new Schema({
 });
 
 
-var newsModel = mongoose.model('Users', usersSchema);
-module.exports = newsModel;
+var usersModel = mongoose.model('Users', usersSchema);
+module.exports = usersModel;
