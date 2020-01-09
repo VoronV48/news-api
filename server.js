@@ -16,7 +16,7 @@ var chalk = require('chalk');
 
 //require database URL from properties file
 var dbURL = require('./config/properties').DB;
-
+var PORT = require('./config/properties').PORT;
 var connected = chalk.bold.cyan;
 var error = chalk.bold.yellow;
 var disconnected = chalk.bold.red;
@@ -88,7 +88,7 @@ const run = async () => {
      process.exit(-1)
  });
 
-   await app.listen(3003, () => console.log(`Example app listening on port 3003!`))
+   await app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`))
   }
   run()
 
