@@ -68,17 +68,14 @@ exports.getNews = function(req, res, next) {
 }
 
 exports.findNews = function(req, res, next) {
-    News.get({title: req.params.title}, function(err, news) {
+    const id = req.params.id;
+    News.findById(id, function(err, news) {
         if(err) {
             res.json({
                 error: err
             })
         }
-        if (news.length <= 0) {
-            return res.json({
-                message: 'Ничего не найдено'
-            })
-        } else {
+        else {
             res.json({
                 news:news
             })
