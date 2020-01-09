@@ -19,7 +19,11 @@ const signIn = (req,res) => {
         }
     }).catch(err =>res.status(500).json({message: err.message}))
 }
-
+const createUser = async (req, res) => {
+    const user = await new User(req.body.user).save()
+    res.send(user)
+}
 module.exports = {
-    signIn
+    signIn,
+    createUser
 }

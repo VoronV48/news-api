@@ -5,7 +5,6 @@ const AdminBro = require('admin-bro')
 const AdminBroExpressjs = require('admin-bro-expressjs');
 // We have to tell AdminBro that we will manage mongoose resources with it
 AdminBro.registerAdapter(require('admin-bro-mongoose'))
-const properties = require('./config/properties');
 // const db = require('./config/database');
 const Users = require('./api/user/user.model')
 const News = require('./api/news/news.dao')
@@ -28,7 +27,7 @@ let app = express();
 
 //configure bodyparser
 let bodyParserJSON = bodyParser.json();
-let bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
+// let bodyParserURLEncoded = bodyParser.urlencoded({extended:true});
 
 //initialise express router
 let router = express.Router();
@@ -38,7 +37,7 @@ let router = express.Router();
 // configure app.use()
 
 app.use(bodyParserJSON);
-app.use(bodyParserURLEncoded);
+// app.use(bodyParserURLEncoded);
 
 // Error handling
 app.use(function(req, res, next) {
@@ -52,10 +51,23 @@ app.use(function(req, res, next) {
 // use express router
 app.use('/api',router);
 const adminBro = new AdminBro({
-   resources: [Users,News],
-   rootPath: '/admin',
+   resources: [News]
 })
-const adminRouter = AdminBroExpressjs.buildRouter(adminBro)
+const ADMIN = {
+    email: 'admin@example.com',
+    password: 'lovejs',
+  }
+//   const adminRouter = AdminBroExpressjs.buildRouter(adminBro)
+const adminRouter = AdminBroExpressjs.buildAuthenticatedRouter(adminBro, {
+    cookieName: 'admin-bro',
+    cookiePassword: 'supersecret-and-long-password-for-a-cookie-in-the-browser',
+    authenticate: async (email, password) => {
+      if (email === ADMIN.email && password === ADMIN.password) {
+        return ADMIN
+      }
+      return null
+    }
+  })
 app.use(adminBro.options.rootPath, adminRouter)
 //call heros routing
 newsRoutes(router);
@@ -76,24 +88,6 @@ const run = async () => {
      process.exit(-1)
  });
 
-mongoose.connection.on('connected', function(){
-    console.log(connected("Mongoose default connection is open to ", dbURL));
-});
-
-mongoose.connection.on('error', function(err){
-    console.log(error("Mongoose default connection has occured "+err+" error"));
-});
-
-mongoose.connection.on('disconnected', function(){
-    console.log(disconnected("Mongoose default connection is disconnected"));
-});
-
-process.on('SIGINT', function(){
-    mongoose.connection.close(function(){
-        console.log(termination("Mongoose default connection is disconnected due to application termination"));
-        process.exit(0)
-    });
-   });
    await app.listen(3003, () => console.log(`Example app listening on port 3003!`))
   }
   run()

@@ -8,5 +8,6 @@ module.exports = function(router) {
     router.put('/update/:id',authMidleware, News.updateNews);
     router.delete('/remove/:id',authMidleware, News.removeNews);
 
-    router.post('/signin', auth.signIn)
+    router.post('/signin', auth.signIn);
+
 }
