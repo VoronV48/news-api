@@ -68,7 +68,7 @@ exports.getNews = function(req, res, next) {
 }
 
 exports.findNews = function(req, res, next) {
-    News.get({_id: req.params._id}, function(err, news) {
+    News.get({title: req.params.title}, function(err, news) {
         if(err) {
             res.json({
                 error: err
